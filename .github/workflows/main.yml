@@ -15,7 +15,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build with Gradle
-        run: ./gradlew assembleDebug # 또는 assembleRelease
+        run: bash ./gradlew assembleDebug # 또는 assembleRelease
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:

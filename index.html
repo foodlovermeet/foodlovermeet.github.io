@@ -46,7 +46,7 @@
 </head>
 <body>
 
-<div class="container">
+<div id="mainApp" class="container">
     <h1>오늘은 내가 요리사</h1>
     
     <div class="setup-box">
@@ -58,9 +58,11 @@
             <label>인원수</label>
             <input type="number" id="peopleInput" value="2" min="1">
         </div>
-        <button onclick="executeLogistics()">식단 편성</button>
+        <button onclick="executeLogistics()">식단 편성</button>	
+        <button onclick="saveAsInteractiveHTML()" >식단표 파일 저장</button>
     </div>
-
+</div>
+<div id="foodGrid" class="container">
     <div id="budgetSummary"></div>
     <div id="display" class="grid"></div>
 </div>
@@ -408,7 +410,6 @@ const DATA = {
     { "n": "닭다리살 구이", "i": ["닭다리살", "간장소스"], "p": 15000 },
     { "n": "두부 스테이크 정식", "i": ["두부", "소스", "샐러드"], "p": 12000 },
     { "n": "소불고기 덮밥", "i": ["소불고기", "양파", "밥"], "p": 16000 },
-    { "n": "참치 마요 덮밥", "i": ["참치캔", "마요네즈", "밥"], "p": 9000 },
     { "n": "제육 덮밥", "i": ["돼지고기", "고추장", "밥"], "p": 12000 },
     { "n": "베이컨 김치 볶음밥", "i": ["베이컨", "김치", "밥"], "p": 10000 },
     { "n": "해물 볶음 우동", "i": ["해물믹스", "우동면", "가쓰오부시"], "p": 15000 },
@@ -995,24 +996,48 @@ function executeLogistics() {
     
     let currentTotal = 0;
     let plan = [];
-
+    // [비책] 이미 선택된 메뉴의 이름을 기록하여 중복을 차단할 저장소
+    let usedMenuNames = new Set();
+	
     for (let day = 1; day <= 30; day++) {
         const remainingDays = 31 - day;
         // 1. 오늘 사용할 수 있는 최대 금전의 한계를 설정
-        let dailyLimit = (targetBudget - currentTotal) / remainingDays;
-
+        let dailyLimit = (targetBudget*0.9 - currentTotal) / remainingDays;
         // 2. [핵심] 가격 필터링이 탑재된 새로운 추출 함수
         const getAffordableMeal = (list, limit) => {
             // 인원 보정가가 적용된 가격이 limit 이하인 것만 선별
-            const affordable = list.filter(item => Math.round(item.p * correctionFactor) <= limit);
-            
+            //const affordable = list.filter(item => Math.round(item.p * correctionFactor) <= limit);
+			
+			  // 1. 예산 안의 메뉴 중, 아직 사용되지 않은(중복 없는) 메뉴만 필터링
+           let affordable = list.filter(item => 
+                Math.round(item.p * correctionFactor) <= limit && 
+                !usedMenuNames.has(item.n)
+            );
+
+    
+			
+			let selected;
             // 만약 가용 메뉴가 없다면, 리스트에서 가장 저렴한 메뉴를 강제 선택
-            let selected;
             if (affordable.length > 0) {
-                selected = affordable[Math.floor(Math.random() * affordable.length)];
+               selected = affordable[Math.floor(Math.random() * affordable.length)];
+				
+				//selected = [...affordable].sort((a, b) => b.p - a.p)[0];
+				// 2. [핵심 수정] 가용 메뉴 중 가격(p)이 가장 높은 순으로 정렬 후 랜덤 추출
+              // 내림차순 정렬: b.p - a.p
+              //selected = affordable.sort((a, b) => b.p - a.p)[Math.floor(Math.random() * affordable.length)];
             } else {
-                selected = list.reduce((min, p) => p.p < min.p ? p : min, list[0]);
+			
+			let nonUsedOnly = list.filter(item => !usedMenuNames.has(item.n));
+                selected = nonUsedOnly.length > 0 
+                    ? nonUsedOnly.reduce((min, p) => p.p < min.p ? p : min)
+                    : list[0]; // 그마저 없으면 완전 중복 허용
+					
+               // selected = list.reduce((min, p) => p.p < min.p ? p : min, list[0]);
             }
+			
+			// 선택된 메뉴 이름을 기록하여 다음 날부터 제외함
+            usedMenuNames.add(selected.n);
+			
             return { ...selected, p: Math.round(selected.p * correctionFactor) };
         };
 
@@ -1021,7 +1046,7 @@ function executeLogistics() {
         let b = getAffordableMeal(DATA.B, dailyLimit * 0.2); 
         
         // 점심은 (일일예산 - 아침값)의 40% 이내에서 권장
-        let s = getAffordableMeal(DATA.S, (dailyLimit - b.p) * 0.5); 
+        let s = getAffordableMeal(DATA.S, (dailyLimit - b.p) * 0.4); 
         
         // 저녁은 남은 모든 일일 예산을 쏟아부음
         let p = getAffordableMeal(DATA.P, dailyLimit - (b.p + s.p));
@@ -1076,6 +1101,33 @@ function executeLogistics() {
         display.appendChild(card);
     });
 }
+
+
+  function saveAsInteractiveHTML() {
+		
+	const style = document.querySelector('style').innerHTML;
+    const content = document.getElementById('foodGrid').innerHTML;
+    
+    // 파일명에 날짜와 시간을 넣어 중복을 피하고 입력을 생략함
+    const now = new Date();
+    const fileName = `식단표_${now.getFullYear()}${now.getMonth()+1}${now.getDate()}_${now.getHours()}${now.getMinutes()}.html`;
+
+    const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${style}</style></head><body><div class="container">${content}</div></body></html>`;
+    
+    const blob = new Blob([fullHTML], { type: 'text/html' });
+    const link = document.createElement('a');
+    
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName; // 브라우저 설정이 OFF라면 이 이름으로 즉시 저장됨
+    link.click();
+    
+    // 메모리 해제 (군량미 관리와 같음)
+    URL.revokeObjectURL(link.href);
+    }
+
+    // 페이지 로드 시 즉시 실행
+    window.onload = executeLogistics;
 </script>
 </body>
 </html>
+

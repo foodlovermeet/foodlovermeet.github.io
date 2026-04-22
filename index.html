@@ -1019,7 +1019,14 @@ function executeLogistics() {
 			let selected;
             // 만약 가용 메뉴가 없다면, 리스트에서 가장 저렴한 메뉴를 강제 선택
             if (affordable.length > 0) {
-               selected = affordable[Math.floor(Math.random() * affordable.length)];
+             // [주군의 명] 예산 내 메뉴들을 가격 내림차순(비싼 순)으로 정렬
+        const sortedAffordable = [...affordable].sort((a, b) => b.p - a.p);
+
+        // 상위 100개(혹은 가용한 전체 개수)를 추출
+        const top100 = sortedAffordable.slice(0, 100);
+
+        // 그 100개 중에서 하나를 무작위로 추첨
+        selected = top100[Math.floor(Math.random() * top100.length)];
 				
 				//selected = [...affordable].sort((a, b) => b.p - a.p)[0];
 				// 2. [핵심 수정] 가용 메뉴 중 가격(p)이 가장 높은 순으로 정렬 후 랜덤 추출

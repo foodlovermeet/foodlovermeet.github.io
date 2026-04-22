@@ -52,7 +52,7 @@
     <div class="setup-box">
         <div class="input-group">
             <label>한 달 목표 예산 (원)</label>
-            <input type="number" id="budgetInput" value="800000">
+            <input type="number" id="budgetInput" value="500000">
         </div>
         <div class="input-group">
             <label>인원수</label>
@@ -1492,10 +1492,10 @@ function executeLogistics() {
 
         // 3. 아침/점심/저녁 순차적 예산 집행 (남은 돈은 다음 끼니로 이월)
         // 아침은 일일 예산의 20% 이내에서 권장
-        let b = getAffordableMeal(DATA.B, dailyLimit * 0.2); 
+        let b = getAffordableMeal(DATA.B, dailyLimit * 0.2*currentStrategy.margin); 
         
         // 점심은 (일일예산 - 아침값)의 40% 이내에서 권장
-        let s = getAffordableMeal(DATA.S, (dailyLimit - b.p) * 0.2); 
+        let s = getAffordableMeal(DATA.S, (dailyLimit - b.p) * 0.4*currentStrategy.margin); 
         
         // 저녁은 남은 모든 일일 예산을 쏟아부음
         let p = getAffordableMeal(DATA.P, dailyLimit - (b.p + s.p));

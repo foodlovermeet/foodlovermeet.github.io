@@ -1552,27 +1552,33 @@ function executeLogistics() {
 }
 
 
-  function saveAsInteractiveHTML() {
-		
-	const style = document.querySelector('style').innerHTML;
+	function saveAsInteractiveHTML() {
+    const style = document.querySelector('style').innerHTML;
     const content = document.getElementById('foodGrid').innerHTML;
-    
-    // 파일명에 날짜와 시간을 넣어 중복을 피하고 입력을 생략함
     const now = new Date();
     const fileName = `식단표_${now.getFullYear()}${now.getMonth()+1}${now.getDate()}_${now.getHours()}${now.getMinutes()}.html`;
-
     const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${style}</style></head><body><div class="container">${content}</div></body></html>`;
-    
-    const blob = new Blob([fullHTML], { type: 'text/html' });
-    const link = document.createElement('a');
-    
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName; // 브라우저 설정이 OFF라면 이 이름으로 즉시 저장됨
-    link.click();
-    
-    // 메모리 해제 (군량미 관리와 같음)
-    URL.revokeObjectURL(link.href);
+
+    // 안드로이드 앱인지 확인 (비밀 통로가 열려 있는지)
+    if (window.AndroidApp && window.AndroidApp.downloadBlob) {
+        // HTML 내용을 Base64로 변환하여 앱으로 전송
+        const reader = new FileReader();
+        const blob = new Blob([fullHTML], { type: 'text/html' });
+        reader.readAsDataURL(blob);
+        reader.onloadend = function() {
+            const base64data = reader.result.split(',')[1];
+            window.AndroidApp.downloadBlob(base64data, fileName, 'text/html');
+        }
+    } else {
+        // 일반 브라우저용 기존 코드
+        const blob = new Blob([fullHTML], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(link.href);
     }
+}
 
     // 페이지 로드 시 즉시 실행
     window.onload = executeLogistics;

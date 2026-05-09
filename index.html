@@ -73,9 +73,17 @@
 </div>
 <div id="foodGrid" class="container">
     <div id="budgetSummary"></div>
+	
+
+        <div style="background: #fdfdfd; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+    <p style="font-size: 11px; color: #999; margin: 0; line-height: 1.5;">
+                ※ 쿠팡 구매링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+            </p>
+        </div>
     <div id="display" class="grid"></div>
 </div>
 
+ 
 <script>
 const DATA = {
     B: [
@@ -1515,7 +1523,7 @@ function executeLogistics() {
 
     const display = document.getElementById('display');
     display.innerHTML = "";
-    
+
     plan.forEach(day => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -1526,7 +1534,7 @@ function executeLogistics() {
                 <div class="ing-item">
                     <span>${ing}</span>
                     <div class="shop-links">
-                        <a href="https://www.coupang.com/np/search?q=${encodeURIComponent(ing)}" target="_blank" class="cp">쿠팡</a>
+						<a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(ing)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="cp">쿠팡</a>
                         <a href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(ing)}" target="_blank" class="nv">네이버</a>
                     </div>
                 </div>`).join('');
@@ -1546,6 +1554,7 @@ function executeLogistics() {
                     <div class="ing-list">${ingHtml}</div>
                 </div>`;
         });
+		
         card.innerHTML = html;
         display.appendChild(card);
     });

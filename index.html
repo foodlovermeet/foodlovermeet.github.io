@@ -37,21 +37,15 @@
         .recipe-links a:hover { background: #eee; }
         
         
-        .meal-price { font-size: 2.0em; 
+        .meal-price { font-size: 1.5em; 
 			  color: #e74c3c; 
 			  font-weight: bold;
-
-			  /* 2. 들쭉날쭉함과 줄바꿈을 원천 봉쇄하는 절대 방어 군령 */
-			  white-space: nowrap !important;  /* 가격 텍스트가 어떤 압박을 받아도 절대 아랫줄로 떨어지지 않게 고정 */
-			  word-break: keep-all !important; /* 금액 단위가 지저분하게 쪼개지는 현상 방지 */
 			  
 			  /* 3. 공간 확보 및 정렬 최적화 */
 			  display: inline-block;
 			  text-align: right;               /* 우측 정렬로 시각적 안정감 부여 */
 			  margin-left: auto;               /* flex 부모 환경일 경우, 메뉴명을 좌측으로 밀고 자신은 우측 끝에 밀착 */
-			  
-			  /* 4. 최소 가로폭 저지선 구축 */
-			  min-width: 120px;}
+			}
         
         .ing-list { margin-top: 12px; border-top: 1px dashed #eee; padding-top: 10px; }
         .ing-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 1.8em; }
@@ -59,6 +53,19 @@
         .cp { color: #e67e22; } /* 쿠팡: 주황 */
         .nv { color: #27ae60; } /* 네이버: 초록 */
 		
+		
+		/* 전체 버튼을 하나로 묶어 들쭉날쭉함을 잡고, 따뜻한 여백을 주는 컨테이너 */
+		.recipe-warm-container2 {
+		  display: flex;
+		  align-items: right;
+		  max-width: 350px; /* 주공의 본문 레이아웃에 맞춰 자연스럽게 녹아듭니다 */
+		  gap: 2px;         /* 버튼 사이의 단정한 간격 */
+		  margin: 2px 0;
+		  padding: 4px;
+		  background-color: #faf7f2; /* 밝고 따뜻한 오프화이트 크림 베이지 바탕 */
+		  border-radius: 10px;       /* 전체 진형을 둥글고 부드럽게 감싸안음 */
+		  box-sizing: border-box;
+		}
 		
 		/* 전체 버튼을 하나로 묶어 들쭉날쭉함을 잡고, 따뜻한 여백을 주는 컨테이너 */
 		.recipe-warm-container {
@@ -71,6 +78,30 @@
 		  background-color: #faf7f2; /* 밝고 따뜻한 오프화이트 크림 베이지 바탕 */
 		  border-radius: 10px;       /* 전체 진형을 둥글고 부드럽게 감싸안음 */
 		  box-sizing: border-box;
+		}
+		
+		
+		/* 메뉴명이 길어져도 1:1:1:1 비율을 칼같이 유지하는 따뜻한 감성 버튼 */
+		.recipe-btn {
+		  display: inline-flex;
+		  align-items: right;
+		  justify-content: right;
+		  padding: 5px 2px;
+		  font-size: 18px;
+		  font-weight: 100;
+		  text-align: right;
+		  text-decoration: none;
+		  
+		  /* 밝고 부드러운 웜톤 컬러 매칭 */
+		  background-color: #ffffff; /* 순백의 깔끔한 버튼 베이스 */
+		  color: #c16b35;            /* 식욕을 돋우는 부드러운 오렌지 웜톤 텍스트 */
+		  border: 1px solid #f0c2d6;  /* 은은한 토스트 빛깔의 테두리 */
+		  border-radius: 6px;
+		  
+		  box-sizing: border-box;
+		  white-space: normal;       /* 메뉴명이 길면 버튼 안에서 얌전히 줄바꿈 */
+		  word-break: keep-all;      /* 단어가 어색하게 쪼개지는 현상 방지 */
+		  transition: all 0.2s ease-in-out;
 		}
 
 		/* 메뉴명이 길어져도 1:1:1:1 비율을 칼같이 유지하는 따뜻한 감성 버튼 */
@@ -2606,20 +2637,20 @@ let affordable = list.filter(item => {
                             <div class="meal-name">${m.d.n}</div>
 							<div style="font-size: 1.2em; color: #7f8c8d; margin-top: 2px;">
 							🔥 ${m.d.k} kcal</div>
-							<div class="recipe-flex-master">
-								<div class="recipe-links">
-									<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.d.n + ' 레시피')}" target="_blank">YouTube</a>
-									<a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}" target="_blank">Google</a>
-									<a href="https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(m.d.n)}" target="_blank">만개의레시피</a>
+							
+								<div class="recipe-warm-container2">
+									<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.d.n + ' 레시피')}" target="_blank" class="recipe-btn">유튜브</a>
+									<a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}" target="_blank" class="recipe-btn">구글</a>
+									<a href="https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(m.d.n)}" target="_blank" class="recipe-btn">레시피</a>
 								</div>
-							</div>
+							
                         </div>
 						
 						
 						 
 						<div class="recipe-warm-container">						  
 						  <a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(m.d.n)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="warm-btn">쿠팡</a>
-						  <a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}&tbm=shop" target="_blank" class="warm-btn">Google</a>
+						  <a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}&tbm=shop" target="_blank" class="warm-btn">구글</a>
 						  <a href="https://map.naver.com/v5/search/${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">네이버맵</a>
 						  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">구글맵</a>
 						</div>

@@ -108,7 +108,7 @@
 		  align-items: right;
 		  justify-content: right;
 		  padding: 5px 2px;
-		  font-size: 18px;
+		  font-size: 1.5em;
 		  font-weight: 800;
 		  text-align: right;
 		  text-decoration: none;
@@ -2634,28 +2634,22 @@ let affordable = list.filter(item => {
                 <div class="meal ${m.t}">
                     <div class="meal-header">
                         <div>
-                            <div class="meal-name">${m.d.n}</div>
-							<div style="font-size: 1.2em; color: #7f8c8d; margin-top: 2px;">
-							🔥 ${m.d.k} kcal</div>
+                            <div class="meal-name">${m.d.n}</div>				
+							<div style="font-size: 1.3em; color: #FF9F43; margin-top: 2px;min-width: 210px;">
+							🔥${m.d.k} kcal / ₩${m.d.p.toLocaleString()}</div>
 							
 								<div class="recipe-warm-container2">
 									<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.d.n + ' 레시피')}" target="_blank" class="recipe-btn">Youtube</a>
 									<a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}" target="_blank" class="recipe-btn">구글</a>
 									<a href="https://www.10000recipe.com/recipe/list.html?q=${encodeURIComponent(m.d.n)}" target="_blank" class="recipe-btn">레시피</a>
 								</div>
-							
                         </div>
-						
-						
-						 
 						<div class="recipe-warm-container">						  
 						  <a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(m.d.n)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="warm-btn">쿠팡</a>
 						  <a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}&tbm=shop" target="_blank" class="warm-btn">구글</a>
 						  <a href="https://map.naver.com/v5/search/${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">네이버맵</a>
 						  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">구글맵</a>
 						</div>
-
-                        <span class="meal-price">${m.d.p.toLocaleString()}원</span>
                     </div>
                     <div class="ing-list">${ingHtml}</div>
                 </div>`;

@@ -2720,24 +2720,27 @@ let affordable = list.filter(item => {
     // 페이지 로드 시 즉시 실행
     window.onload = executeLogistics;
 </script>
-
 <script type="text/javascript">
 function googleTranslateElementInit() {
+  // [주공의 지략 적용] 구글 엔진에게 우리가 서비스할 글로벌 언어 군대를 명확히 교부하옵니다.
   new google.translate.TranslateElement({
     pageLanguage: 'ko', 
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    // 영어, 일어, 중국어 간체, 베트남어, 태국어 등 타겟 언어 보급로를 강제로 개설하옵니다.
+    includedLanguages: 'en,ja,zh-CN,vi,th', 
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
   }, 'google_translate_element');
 
-  // 구글 번역 상자가 생성될 때까지 0.2초마다 정찰하는 부서
+  // 구글 엔진이 준비를 마치는 즉시 배후에서 기습을 감행하는 '정찰조'를 가동하옵니다.
   const checkInterval = setInterval(function() {
     const selectEl = document.querySelector('.goog-te-combo');
     
     if (selectEl) {
-      clearInterval(checkInterval); // 찾았으니 정찰 종료
+      clearInterval(checkInterval); // 부품을 찾았으니 정찰을 종료하옵니다.
       
       const userLang = navigator.language || navigator.userLanguage;
       
-      // 유저 스마트폰이 한국어가 아니라면 강제로 번역 단추를 누릅니다
+      // 유저의 스마트폰 시스템 언어가 한국어가 아니라면 자동 번역 집행!
       if (userLang && !userLang.startsWith('ko')) {
         let targetLang = 'en';
         if (userLang.startsWith('ja')) targetLang = 'ja';
@@ -2745,15 +2748,19 @@ function googleTranslateElementInit() {
         else if (userLang.startsWith('vi')) targetLang = 'vi';
         else if (userLang.startsWith('th')) targetLang = 'th';
         
+        // 쿠키와 셀렉트 박스 두 곳에 동시에 화약을 장전하옵니다.
+        document.cookie = "googtrans=/ko/" + targetLang + "; path=/; domain=.github.io;";
+        document.cookie = "googtrans=/ko/" + targetLang + "; path=/;";
+        
         selectEl.value = targetLang;
         selectEl.dispatchEvent(new Event('change'));
-        console.log("구글 자동 번역 작동 성공: " + targetLang);
+        console.log("주공의 계책으로 자동 번역 집행 완료: " + targetLang);
       }
     }
-  }, 200);
+  }, 100); // 0.1초 간격으로 매우 정밀하게 추적하옵니다.
 
-  // 7초 동안 안 나타나면 정찰조 퇴각
-  setTimeout(function() { clearInterval(checkInterval); }, 7000);
+  // 보안벽 과부하 방지를 위한 8초 제한 퇴각 조치
+  setTimeout(function() { clearInterval(checkInterval); }, 8000);
 }
 </script>
 
@@ -2765,6 +2772,7 @@ function googleTranslateElementInit() {
   .goog-logo-link { display:none !important; }
   .goog-te-gadget { color: transparent !important; font-size: 0px !important; }
   .goog-te-balloon-frame { display: none !important; }
+  #goog-gt-tt { display: none !important; }
 </style>
 </body>
 </html>

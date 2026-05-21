@@ -171,7 +171,7 @@
     </style>
 </head>
 <body>
-<div id="google_translate_element"></div>
+<div id="google_translate_element" style="display:none;"></div>
 
 <div id="mainApp" class="container">
     <h1 class="notranslate" style="display:none;">식단선생 MealMaster</h1>
@@ -233,11 +233,41 @@ function googleTranslateElementInit() {
     pageLanguage: 'ko', 
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
   }, 'google_translate_element');
+
+  // 구글 엔진 로드가 완료되면, 유저의 스마트폰 시스템 언어를 즉시 추적하옵니다
+  setTimeout(function() {
+    // 안드로이드 시스템 언어 낚아채기 (예: 'en-US', 'ja-JP', 'ko-KR')
+    const userLang = navigator.language || navigator.userLanguage;
+    
+    // 만약 한국어('ko')가 아니라면 강제로 번역 기습을 감행하옵니다
+    if (userLang && !userLang.startsWith('ko')) {
+      let targetLang = 'en'; // 기본 구원 언어는 영어이옵니다
+      
+      if (userLang.startsWith('ja')) targetLang = 'ja';      // 일본어 일상
+      else if (userLang.startsWith('zh')) targetLang = 'zh-CN'; // 중국 대륙
+      else if (userLang.startsWith('vi')) targetLang = 'vi';    // 베트남
+      else if (userLang.startsWith('th')) targetLang = 'th';    // 태국
+      
+      // 구글 번역 상자의 셀렉트 박스를 찾아 은밀하게 값을 변경하옵니다
+      const selectEl = document.querySelector('.goog-te-combo');
+      if (selectEl) {
+        selectEl.value = targetLang;
+        // 변경된 값을 구글 엔진에 강제로 발라버리는 이벤트를 발생시키옵니다
+        selectEl.dispatchEvent(new Event('change'));
+      }
+    }
+  }, 1000); // 구글 엔진이 완전히 안착할 수 있도록 1초의 미세한 복병 시간을 주옵니다
 }
 </script>
 
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
- 
+
+<style>
+  iframe.goog-te-banner-frame { display: none !important; }
+  body { top: 0px !important; }
+  .goog-logo-link { display:none !important; }
+  .goog-te-gadget { color: transparent !important; }
+</style>
 <script>
 const DATA = {
     B: [

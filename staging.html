@@ -227,53 +227,6 @@
     </div>
     <div id="display" class="grid"></div>
 </div>
-
-
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ko', 
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-  }, 'google_translate_element');
-
-  // [보완 전술] 구글 셀렉트 박스가 화면에 생성될 때까지 주기적으로 탐색하는 '정찰조'를 가동하옵니다.
-  const checkInterval = setInterval(function() {
-    const selectEl = document.querySelector('.goog-te-combo');
-    
-    if (selectEl) {
-      clearInterval(checkInterval); // 찾았으니 정찰을 종료하옵니다.
-      
-      const userLang = navigator.language || navigator.userLanguage;
-      
-      // 한국어가 아니라면 강제 번역 집행
-      if (userLang && !userLang.startsWith('ko')) {
-        let targetLang = 'en';
-        if (userLang.startsWith('ja')) targetLang = 'ja';
-        else if (userLang.startsWith('zh')) targetLang = 'zh-CN';
-        else if (userLang.startsWith('vi')) targetLang = 'vi';
-        else if (userLang.startsWith('th')) targetLang = 'th';
-        
-        selectEl.value = targetLang;
-        selectEl.dispatchEvent(new Event('change'));
-        console.log("구글 자동 번역단 전원 투입 완료: " + targetLang);
-      }
-    }
-  }, 200); // 0.2초마다 샅샅이 뒤져서 나타나는 즉시 낚아챕니다.
-
-  // 만약 7초 동안 안 나타나면 정찰조를 퇴각시켜 과부하를 막사옵니다.
-  setTimeout(function() { clearInterval(checkInterval); }, 7000);
-}
-</script>
-
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<style>
-  iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; }
-  body { top: 0px !important; position: static !important; }
-  .goog-logo-link { display:none !important; }
-  .goog-te-gadget { color: transparent !important; font-size: 0px !important; }
-  .goog-te-balloon-frame { display: none !important; }
-</style>
 <script>
 const DATA = {
     B: [
@@ -2767,5 +2720,51 @@ let affordable = list.filter(item => {
     // 페이지 로드 시 즉시 실행
     window.onload = executeLogistics;
 </script>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ko', 
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+
+  // 구글 번역 상자가 생성될 때까지 0.2초마다 정찰하는 부서
+  const checkInterval = setInterval(function() {
+    const selectEl = document.querySelector('.goog-te-combo');
+    
+    if (selectEl) {
+      clearInterval(checkInterval); // 찾았으니 정찰 종료
+      
+      const userLang = navigator.language || navigator.userLanguage;
+      
+      // 유저 스마트폰이 한국어가 아니라면 강제로 번역 단추를 누릅니다
+      if (userLang && !userLang.startsWith('ko')) {
+        let targetLang = 'en';
+        if (userLang.startsWith('ja')) targetLang = 'ja';
+        else if (userLang.startsWith('zh')) targetLang = 'zh-CN';
+        else if (userLang.startsWith('vi')) targetLang = 'vi';
+        else if (userLang.startsWith('th')) targetLang = 'th';
+        
+        selectEl.value = targetLang;
+        selectEl.dispatchEvent(new Event('change'));
+        console.log("구글 자동 번역 작동 성공: " + targetLang);
+      }
+    }
+  }, 200);
+
+  // 7초 동안 안 나타나면 정찰조 퇴각
+  setTimeout(function() { clearInterval(checkInterval); }, 7000);
+}
+</script>
+
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+  iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; }
+  body { top: 0px !important; position: static !important; }
+  .goog-logo-link { display:none !important; }
+  .goog-te-gadget { color: transparent !important; font-size: 0px !important; }
+  .goog-te-balloon-frame { display: none !important; }
+</style>
 </body>
 </html>

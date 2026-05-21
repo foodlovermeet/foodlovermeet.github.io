@@ -171,11 +171,10 @@
     </style>
 </head>
 <body>
-<div id="google_translate_element" style="display:none;"></div>
+<div id="google_translate_element"></div>
 
 <div id="mainApp" class="container">
     <h1 class="notranslate" style="display:none;">식단선생 MealMaster</h1>
-    
     <h1>식단을 만들어보세요</h1>
     
     <div class="setup-box">
@@ -212,8 +211,8 @@
     </div>  
     
     <div style="flex-basis: 100%; display: flex; justify-content: center; gap: 100px;">
-        <Sbutton onclick="executeLogistics()">식단 편성</Sbutton>   
-        <Sbutton onclick="saveAsInteractiveHTML()">파일 저장</Sbutton>
+        <button onclick="executeLogistics()">식단 편성</button>   
+        <button onclick="saveAsInteractiveHTML()">파일 저장</button>
     </div>
 </div>
 
@@ -227,17 +226,18 @@
     </div>
     <div id="display" class="grid"></div>
 </div>
+
 <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
-    pageLanguage: 'ko',
-    includedLanguages: 'en,ja,zh-CN,vi,th,id', 
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: true
+    pageLanguage: 'ko', 
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
   }, 'google_translate_element');
 }
 </script>
+
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+ 
 <script>
 const DATA = {
     B: [

@@ -171,8 +171,11 @@
     </style>
 </head>
 <body>
+<div id="google_translate_element" style="display:none;"></div>
 
 <div id="mainApp" class="container">
+    <h1 class="notranslate" style="display:none;">식단선생 MealMaster</h1>
+    
     <h1>식단을 만들어보세요</h1>
     
     <div class="setup-box">
@@ -184,16 +187,16 @@
             <label>인원수</label>
             <input type="number" id="peopleInput" value="2" min="1">
         </div>
-		
-		<div class="input-group">
-        <label>식비 옵션</label>
-        <select id="budgetOption" style="padding:10px;font-size: 18px; border-radius:5px;">
-            <option value="premium">✨ 프리미엄 </option>
-            <option value="normal" selected>⚖️ 일반</option>
-            <option value="economy">📉 절약 </option>
-        </select>
-    </div>
-	<div class="input-group">
+        
+        <div class="input-group">
+            <label>식비 옵션</label>
+            <select id="budgetOption" style="padding:10px;font-size: 18px; border-radius:5px;">
+                <option value="premium">✨ 프리미엄 </option>
+                <option value="normal" selected>⚖️ 일반</option>
+                <option value="economy">📉 절약 </option>
+            </select>
+        </div>
+        <div class="input-group">
             <label>식단 옵션</label>
             <select id="cuisineOption" style="padding:10px;font-size: 18px; border-radius:5px;">
                 <option value="all" selected> AL 모든 음식</option>
@@ -205,27 +208,36 @@
                 <option value="sugar-free">DT 저당식</option>
                 <option value="low-fat">LF 저지방</option>
             </select>
-        </div>	
-    </div>	
-	
-		<div style="flex-basis: 100%; display: flex; justify-content: center; gap: 100px;">
-        <Sbutton onclick="executeLogistics()">식단 편성</Sbutton>	
-        <Sbutton onclick="saveAsInteractiveHTML()" >파일 저장</Sbutton>
-		</div>
+        </div>  
+    </div>  
+    
+    <div style="flex-basis: 100%; display: flex; justify-content: center; gap: 100px;">
+        <Sbutton onclick="executeLogistics()">식단 편성</Sbutton>   
+        <Sbutton onclick="saveAsInteractiveHTML()">파일 저장</Sbutton>
+    </div>
 </div>
+
 <div id="foodGrid" class="container">
     <div id="budgetSummary"></div>
-	
-
-        <div style="background: #fdfdfd; border: 1px solid #eee; padding: 5px; border-radius: 10px; margin-bottom:5px; text-align: center;">
-    <p style="font-size: 17px; color: #999; margin: 0; line-height: 1.5;">
-                ※ 쿠팡 구매링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-            </p>
-        </div>
+    
+    <div style="background: #fdfdfd; border: 1px solid #eee; padding: 5px; border-radius: 10px; margin-bottom:5px; text-align: center;">
+        <p style="font-size: 17px; color: #999; margin: 0; line-height: 1.5;">
+            ※ 쿠팡 구매링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+        </p>
+    </div>
     <div id="display" class="grid"></div>
 </div>
-
- 
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ko',
+    includedLanguages: 'en,ja,zh-CN,vi,th,id', 
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: true
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
 const DATA = {
     B: [

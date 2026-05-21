@@ -173,60 +173,6 @@
 <body>
 <div id="google_translate_element" style="display:none;"></div>
 
-<div id="mainApp" class="container">
-    <h1 class="notranslate" style="display:none;">식단선생 MealMaster</h1>
-    <h1>식단을 만들어보세요</h1>
-    
-    <div class="setup-box">
-        <div class="input-group">
-            <label>예산 (원)</label>
-            <input type="number" id="budgetInput" value="800000">
-        </div>
-        <div class="input-group">
-            <label>인원수</label>
-            <input type="number" id="peopleInput" value="2" min="1">
-        </div>
-        
-        <div class="input-group">
-            <label>식비 옵션</label>
-            <select id="budgetOption" style="padding:10px;font-size: 18px; border-radius:5px;">
-                <option value="premium">✨ 프리미엄 </option>
-                <option value="normal" selected>⚖️ 일반</option>
-                <option value="economy">📉 절약 </option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>식단 옵션</label>
-            <select id="cuisineOption" style="padding:10px;font-size: 18px; border-radius:5px;">
-                <option value="all" selected> AL 모든 음식</option>
-                <option value="korean">KR 한식</option>
-                <option value="western">WT 양식</option>
-                <option value="chinese">CN 중식</option>
-                <option value="asian">EA 동남아</option>
-                <option value="diet">FT 다이어트식</option>
-                <option value="sugar-free">DT 저당식</option>
-                <option value="low-fat">LF 저지방</option>
-            </select>
-        </div>  
-    </div>  
-    
-    <div style="flex-basis: 100%; display: flex; justify-content: center; gap: 100px;">
-        <button onclick="executeLogistics()">식단 편성</button>   
-        <button onclick="saveAsInteractiveHTML()">파일 저장</button>
-    </div>
-</div>
-
-<div id="foodGrid" class="container">
-    <div id="budgetSummary"></div>
-    
-    <div style="background: #fdfdfd; border: 1px solid #eee; padding: 5px; border-radius: 10px; margin-bottom:5px; text-align: center;">
-        <p style="font-size: 17px; color: #999; margin: 0; line-height: 1.5;">
-            ※ 쿠팡 구매링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-        </p>
-    </div>
-    <div id="display" class="grid"></div>
-</div>
-
 <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
@@ -234,39 +180,43 @@ function googleTranslateElementInit() {
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
   }, 'google_translate_element');
 
-  // 구글 엔진 로드가 완료되면, 유저의 스마트폰 시스템 언어를 즉시 추적하옵니다
-  setTimeout(function() {
-    // 안드로이드 시스템 언어 낚아채기 (예: 'en-US', 'ja-JP', 'ko-KR')
-    const userLang = navigator.language || navigator.userLanguage;
+  // [보완 전술] 구글 셀렉트 박스가 화면에 생성될 때까지 주기적으로 탐색하는 '정찰조'를 가동하옵니다.
+  const checkInterval = setInterval(function() {
+    const selectEl = document.querySelector('.goog-te-combo');
     
-    // 만약 한국어('ko')가 아니라면 강제로 번역 기습을 감행하옵니다
-    if (userLang && !userLang.startsWith('ko')) {
-      let targetLang = 'en'; // 기본 구원 언어는 영어이옵니다
+    if (selectEl) {
+      clearInterval(checkInterval); // 찾았으니 정찰을 종료하옵니다.
       
-      if (userLang.startsWith('ja')) targetLang = 'ja';      // 일본어 일상
-      else if (userLang.startsWith('zh')) targetLang = 'zh-CN'; // 중국 대륙
-      else if (userLang.startsWith('vi')) targetLang = 'vi';    // 베트남
-      else if (userLang.startsWith('th')) targetLang = 'th';    // 태국
+      const userLang = navigator.language || navigator.userLanguage;
       
-      // 구글 번역 상자의 셀렉트 박스를 찾아 은밀하게 값을 변경하옵니다
-      const selectEl = document.querySelector('.goog-te-combo');
-      if (selectEl) {
+      // 한국어가 아니라면 강제 번역 집행
+      if (userLang && !userLang.startsWith('ko')) {
+        let targetLang = 'en';
+        if (userLang.startsWith('ja')) targetLang = 'ja';
+        else if (userLang.startsWith('zh')) targetLang = 'zh-CN';
+        else if (userLang.startsWith('vi')) targetLang = 'vi';
+        else if (userLang.startsWith('th')) targetLang = 'th';
+        
         selectEl.value = targetLang;
-        // 변경된 값을 구글 엔진에 강제로 발라버리는 이벤트를 발생시키옵니다
         selectEl.dispatchEvent(new Event('change'));
+        console.log("구글 자동 번역단 전원 투입 완료: " + targetLang);
       }
     }
-  }, 1000); // 구글 엔진이 완전히 안착할 수 있도록 1초의 미세한 복병 시간을 주옵니다
+  }, 200); // 0.2초마다 샅샅이 뒤져서 나타나는 즉시 낚아챕니다.
+
+  // 만약 7초 동안 안 나타나면 정찰조를 퇴각시켜 과부하를 막사옵니다.
+  setTimeout(function() { clearInterval(checkInterval); }, 7000);
 }
 </script>
 
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <style>
-  iframe.goog-te-banner-frame { display: none !important; }
-  body { top: 0px !important; }
+  iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; }
+  body { top: 0px !important; position: static !important; }
   .goog-logo-link { display:none !important; }
-  .goog-te-gadget { color: transparent !important; }
+  .goog-te-gadget { color: transparent !important; font-size: 0px !important; }
+  .goog-te-balloon-frame { display: none !important; }
 </style>
 <script>
 const DATA = {

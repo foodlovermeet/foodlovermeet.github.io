@@ -3425,7 +3425,7 @@ let affordable = list.filter(item => {
     newWindow.document.close();
 
     const BIZ_API_BASE = "https://biz.adpick.co.kr/api/6350388424916232/search";
-    const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=10`;
+    const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=20`;
 	
     try {
         const response = await fetch(requestUrl);

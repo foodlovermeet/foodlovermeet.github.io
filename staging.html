@@ -682,7 +682,7 @@ const DATA = {
     { n: "야채고로케", i: ["감자", "양파", "빵가루"], p: 2500, c: "korean", k: 350 },
     { n: "샌드위치", i: ["식빵", "햄", "치즈"], p: 3000, c: "western", k: 210 },
     { n: "건포도스콘", i: ["밀가루", "건포도", "우유"], p: 3500, c: "western", k: 340 },
-    { n: "브라우니한조각", i: ["초콜릿", "버터", "호두"], p: 4000, c: "western", k: 450 },
+    { n: "브라우니", i: ["초콜릿", "버터", "호두"], p: 4000, c: "western", k: 450 },
     { n: "삶은달걀(2pc)", i: ["달걀", "물", "소금"], p: 2000, c: "korean", k: 160 },
     { n: "구운계란(2pc)", i: ["달걀", "압력력", "소금"], p: 2500, c: "korean", k: 150 },
     { n: "소떡소떡", i: ["소시지", "가래떡", "양념치킨소스"], p: 4000, c: "korean", k: 410 },
@@ -3329,7 +3329,7 @@ let affordable = list.filter(item => {
                     <div class="shop-links">
 						<a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(ing)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="cp">쿠팡</a>
                         <!-- <a href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(ing)}" target="_blank" class="nv">네이버</a> -->
-						<a href="#" onclick="openAdpickInNewWindow('${m.d.n}')" class="nv">adpick</a>
+						<a href="#" onclick="openAdpickInNewWindow('${m.d.n}')" class="nv">ADPICK</a>
                     </div>
                 </div>`).join('');
 
@@ -3412,13 +3412,13 @@ let affordable = list.filter(item => {
             <title>식단선생 - 상품 로딩중</title>
             <style>
                 body { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; color: #666; background: #f8f9fa; }
-                .loader { border: 4px solid #f3f3f3; border-top: 4px solid #2ecc71; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-right: 10px; }
+                .loader {border: 4px solid #f3f3f3; border-top: 4px solid #2ecc71; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-right: 10px; }
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
             </style>
         </head>
         <body>
             <div class="loader"></div>
-            <p>'${decodeURIComponent(query)}' 관련 상품 정보를 가져오는 중입니다...</p>
+            <p style='font-size: 30px;'>'${decodeURIComponent(query)}' 관련 상품 정보를 가져오는 중입니다...</p>
         </body>
         </html>
     `);
@@ -3459,6 +3459,22 @@ let affordable = list.filter(item => {
                 .card:active { transform: scale(0.98); }
                 .img-box { position: relative; width: 100%; padding-top: 50%; background: #f8f9fa; }
                 .img-box img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; }
+				.icon-box {
+					position: relative;
+					width: 23px;         
+					height: 23px; 
+					flex-shrink: 0;    
+					background: #f1f9fa
+				}
+				.icon-box img {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;       
+					height: 100%;     
+					object-fit: cover; 
+					border-radius: 4px; 
+				}
                 .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
                 .title { font-size: 13px; line-height: 1.4; color: #34495e; height: 2.8em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin: 0 0 8px 0; }
                 .price { margin-top: auto; font-size: 15px; font-weight: bold; color: #e74c3c; }
@@ -3477,13 +3493,19 @@ let affordable = list.filter(item => {
             const price = item.price ? `${Number(item.price).toLocaleString()}원` : "가격 문의";
             const imgUrl = item.photo;
             const targetLink = item.commissionlink;
+			const cp_icon=item.cp_icon;
+			const cp_name= item.cp_name;
 
             htmlContent += `
                 <a href="${targetLink}" target="_blank" class="card">
                     <div class="img-box">
-                        <img src="${imgUrl}" alt="${title}" onerror="this.src='">
+                        <img src="${imgUrl}" alt="${title}">
                     </div>
-                    <div class="info">
+                    <div class="info">							
+							<div style="display: flex;  gap: 5px;">
+								<img src="${cp_icon}" class="icon-box" alt="${cp_name}">
+								<h1 class="title" style="margin-top:2px" >${cp_name}</h1>
+							</div>
                         <h4 class="title">${title}</h4>
                         <div class="price">${price}</div>
                     </div>

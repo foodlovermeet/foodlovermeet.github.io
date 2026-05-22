@@ -3430,8 +3430,6 @@ let affordable = list.filter(item => {
     try {
         const response = await fetch(requestUrl);
         if (!response.ok) throw new Error("API 통신 실패");
-		
-	console.info(response);
 
         const jsonResult = await response.json();
         const items = Array.isArray(jsonResult) ? jsonResult : (jsonResult.data || jsonResult.list || []);

@@ -203,21 +203,29 @@
 		
 
 
-    // 페이지 로드 시 즉시 실행
-    window.onload = executeLogistics;
-	
-		// 페이지 로드 시점에 가짜 히스토리를 하나 강제로 삽입합니다.
-	history.pushState(null, null, window.location.href);
+    // 1. 진입 즉시 히스토리 스택을 2개로 복사하여 백키 버퍼를 만듭니다.
+(function() {
+    history.pushState(null, null, window.location.href);
+    
+    // 사용자가 화면을 터치하거나 클릭했을 때 활성화되도록 유도
+    const activateBackDetect = () => {
+        window.addEventListener('popstate', handleBackEvent, { once: true });
+    };
+    
+    window.addEventListener('touchstart', activateBackDetect, { once: true });
+    window.addEventListener('click', activateBackDetect, { once: true });
+    
+    // 초기 터치가 없더라도 기본적으로 이벤트를 걸어둡니다.
+    window.addEventListener('popstate', handleBackEvent);
+})();
 
-	// 사용자가 백키를 누르면 popstate 이벤트가 발생합니다.
-	window.addEventListener('popstate', function(event) {
-		// 백키를 눌렀을 때 앱이 종료되는 대신 이동하고자 하는 '첫 화면 URL'을 지정합니다.
-		// 예: 메인 페이지가 존재하는 경우 해당 주소로 이동시킵니다.
-		const mainPageUrl = "https://foodlovermeet.github.io/index.html"; 
-		
-		// 첫 화면으로 강제 리다이렉트
-		window.location.href = mainPageUrl;
-	});
+function handleBackEvent() {
+    // 이동하고자 하는 첫 화면(메인)의 주소를 정확히 입력하십시오.
+    const mainPageUrl = "https://foodlovermeet.github.io/"
+    
+    // 뒤로가기 감지 시 메인으로 강제 리다이렉트
+    window.location.replace(mainPageUrl);
+}
     </script>
 </body>
 </html>

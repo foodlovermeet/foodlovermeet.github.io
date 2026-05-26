@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>식단표 </title>
+    <title>식단표</title>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
         .container { max-width: 1200px; margin: auto; background: #fff; padding: 10px; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
@@ -3327,8 +3327,8 @@ let affordable = list.filter(item => {
                     <span>${ing}</span>
                     <div class="shop-links">
 						<a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(ing)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="cp">쿠팡</a>
-                        <!-- <a href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(ing)}" target="_blank" class="nv">네이버</a> -->
-						<a href="#" onclick="openAdpickInNewWindow('${ing}')" class="nv">선생픽</a>
+                        <!-- <a href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(ing)}" target="_blank" class="nv">네이버</a> -->						
+                        <a href="https://foodlovermeet.github.io/masterpick.html?q=${encodeURIComponent(ing)}" target="_blank" class="nv">선생픽</a>
                     </div>
                 </div>`).join('');
 
@@ -3348,9 +3348,9 @@ let affordable = list.filter(item => {
                         </div>
 						<div class="recipe-warm-container">						  
 						  <a href="https://link.coupang.com/re/AFFSRP?lptag=AF7838662&pageKey=${encodeURIComponent(m.d.n)}&traceid=V0-153-${Math.random().toString(36).substring(2, 15)}" target="_blank" class="cpwarm-btn">쿠팡</a>
-						  <!-- <a href="https://map.naver.com/v5/search/${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">네이버맵</a> -->
-						  <a href="#" onclick="openAdpickInNewWindow('${m.d.n}')" class="warm-btn">선생픽</a>
+						  <a href="https://foodlovermeet.github.io/masterpick.html?q=${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">선생픽</a>
 						  <a href="https://www.google.com/search?q=${encodeURIComponent(m.d.n)}&tbm=shop" target="_blank" class="warm-btn">구글</a>
+						  <!-- <a href="https://map.naver.com/v5/search/${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">네이버맵</a> -->
 						  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.d.n)}" target="_blank" class="warm-btn">구글맵</a>
 						</div>
                     </div>
@@ -3365,236 +3365,34 @@ let affordable = list.filter(item => {
 }
 
 	function saveAsInteractiveHTML() {
-    const style = document.querySelector('style').innerHTML;
-    const content = document.getElementById('foodGrid').innerHTML;
-    const now = new Date();
-    const fileName = `식단표_${now.getFullYear()}${now.getMonth()+1}${now.getDate()}_${now.getHours()}${now.getMinutes()}.html`;
-    const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${style}</style></head><body><div class="container">${content}</div></body></html>`;
+		const style = document.querySelector('style').innerHTML;
+		const content = document.getElementById('foodGrid').innerHTML;
+		const now = new Date();
+		const fileName = `식단표_${now.getFullYear()}${now.getMonth()+1}${now.getDate()}_${now.getHours()}${now.getMinutes()}.html`;
+		const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${style}</style></head><body><div class="container">${content}</div></body></html>`;
 
-    // 안드로이드 앱인지 확인 (비밀 통로가 열려 있는지)
-    if (window.AndroidApp && window.AndroidApp.downloadBlob) {
-        // HTML 내용을 Base64로 변환하여 앱으로 전송
-        const reader = new FileReader();
-        const blob = new Blob([fullHTML], { type: 'text/html' });
-        reader.readAsDataURL(blob);
-        reader.onloadend = function() {
-            const base64data = reader.result.split(',')[1];
-            window.AndroidApp.downloadBlob(base64data, fileName, 'text/html');
-        }
-    } else {
-        // 일반 브라우저용 기존 코드
-        const blob = new Blob([fullHTML], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = fileName;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    }
-}
+		// 안드로이드 앱인지 확인 (비밀 통로가 열려 있는지)
+		if (window.AndroidApp && window.AndroidApp.downloadBlob) {
+			// HTML 내용을 Base64로 변환하여 앱으로 전송
+			const reader = new FileReader();
+			const blob = new Blob([fullHTML], { type: 'text/html' });
+			reader.readAsDataURL(blob);
+			reader.onloadend = function() {
+				const base64data = reader.result.split(',')[1];
+				window.AndroidApp.downloadBlob(base64data, fileName, 'text/html');
+			}
+		} else {
+			// 일반 브라우저용 기존 코드
+			const blob = new Blob([fullHTML], { type: 'text/html' });
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = fileName;
+			link.click();
+			URL.revokeObjectURL(link.href);
+		}
+	}
 
-     async function openAdpickInNewWindow(query) {
-    if (!query) {
-        alert("검색어를 입력해주세요.");
-        return;
-    }
 
-    // [중요] 비동기 통신 전 새 창을 먼저 열어야 브라우저 팝업 차단을 회피합니다.
-    const newWindow = window.open("", "_blank");
-    if (!newWindow) {
-        alert("팝업 차단 해제가 필요합니다.");
-        return;
-    }
-
-		newWindow.document.write(`
-		<!DOCTYPE html>
-		<html lang="ko">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-			<title>식단선생 - 상품 로딩중</title>
-			<style>
-				html, body {
-					margin: 0;
-					padding: 0;
-					width: 100%;
-					height: 100%;
-					background-color: #f8f9fa;
-				}
-				/* 모바일 뷰포트 높이 오류를 방지하기 위해 fixed 배치 사용 */
-				.loading-container {
-					position: fixed;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-					text-align: center;
-					width: 90%;
-					max-width: 400px;
-					box-sizing: border-box;
-					z-index: 9999;
-				}
-				.loader {
-					border: 4px solid #e2e8f0;
-					border-top: 4px solid #2ecc71;
-					border-radius: 50%;
-					width: 40px;
-					height: 40px;
-					animation: spin 1s linear infinite;
-					margin: 0 auto 24px auto;
-				}
-				.loading-title {
-					font-size: 24px;
-					font-weight: 800;
-					line-height: 1.4;
-					color: #2c3e50;
-					margin: 0 0 16px 0;
-					letter-spacing: -0.5px;
-				}
-				.loading-title span {
-					color: #2ecc71;
-				}
-				.divider {
-					width: 40px;
-					height: 3px;
-					background-color: #e2e8f0;
-					margin: 0 auto 20px auto;
-					border-radius: 2px;
-				}
-				.loading-subtitle {
-					font-size: 15px;
-					font-weight: 500;
-					line-height: 1.6;
-					color: #7f8c8d;
-					margin: 0;
-				}
-				@keyframes spin { 
-					0% { transform: rotate(0deg); } 
-					100% { transform: rotate(360deg); } 
-				}
-			</style>
-		</head>
-		<body>
-			<div class="loading-container">
-				<div class="loader"></div>
-				
-				<h1 class="loading-title">
-					<span>식단선생</span>이 최적의 상품을<br>엄선하고 있습니다!
-				</h1>
-				
-				<div class="divider"></div>
-				
-				<p class="loading-subtitle">
-					'${decodeURIComponent(query)}' 관련 상품 정보를 가져오는 중입니다.<br>
-					잠시만 기다려 주십시오.
-				</p>
-			</div>
-		</body>
-		</html>
-	`);
-    newWindow.document.close();
-
-    const BIZ_API_BASE = "https://biz.adpick.co.kr/api/6350388424916232/search";
-    const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=20`;
-	
-    try {
-        const response = await fetch(requestUrl);
-        if (!response.ok) throw new Error("API 통신 실패");
-
-        const jsonResult = await response.json();
-        const items = Array.isArray(jsonResult) ? jsonResult : (jsonResult.data || jsonResult.list || []);
-
-        if (items.length === 0) {
-            newWindow.document.body.innerHTML = `<p style="text-align:center; margin-top:50px;">'${decodeURIComponent(query)}' 결과가 없습니다.</p>`;
-            return;
-        }
-
-        // 1. 새 창에 주입할 이쁜 UI 스타일 정의 (CSS)
-        let htmlContent = `
-        <!DOCTYPE html>
-        <html lang="ko">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>식단선생 추천 상품 - ${decodeURIComponent(query)}</title>
-            <style>
-                body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-                .header { text-align: center; padding: 15px 0; margin-bottom: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-                .header h2 { margin: 0; color: #2c3e50; font-size: 18px; }
-                .header span { color: #2ecc71; font-weight: bold; }
-                .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 800px; margin: 0 auto; }
-                .card { background: white; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s; }
-                .card:active { transform: scale(0.98); }
-                .img-box { position: relative; width: 100%; padding-top: 50%; background: #f8f9fa; }
-                .img-box img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; }
-				.icon-box {
-					position: relative;
-					width: 23px;         
-					height: 23px; 
-					flex-shrink: 0;    
-					background: #f1f9fa
-				}
-				.icon-box img {
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;       
-					height: 100%;     
-					object-fit: cover; 
-					border-radius: 4px; 
-				}
-                .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-                .title { font-size: 13px; line-height: 1.4; color: #34495e; height: 2.8em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin: 0 0 8px 0; }
-                .price { margin-top: auto; font-size: 15px; font-weight: bold; color: #e74c3c; }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h2>식단선생 추천 상품: <span>${decodeURIComponent(query)}</span></h2>
-            </div>
-            <div class="grid">
-        `;
-
-        // 2. 받아온 JSON 데이터를 루프 돌며 카드 컴포넌트로 생성
-        items.forEach(item => {
-            const title = item.title;
-            const price = item.price ? `${Number(item.price).toLocaleString()}원` : "가격 문의";
-            const imgUrl = item.photo;
-            const targetLink = item.commissionlink;
-			const cp_icon=item.cp_icon;
-			const cp_name= item.cp_name;
-
-            htmlContent += `
-                <a href="${targetLink}" target="_blank" class="card">
-                    <div class="img-box">
-                        <img src="${imgUrl}" alt="${title}">
-                    </div>
-                    <div class="info">							
-							<div style="display: flex;  gap: 5px;">
-								<img src="${cp_icon}" class="icon-box" alt="${cp_name}">
-								<h1 class="title" style="margin-top:2px" >${cp_name}</h1>
-							</div>
-                        <h4 class="title">${title}</h4>
-                        <div class="price">${price}</div>
-                    </div>
-                </a>
-            `;
-        });
-
-        htmlContent += `
-            </div>
-        </body>
-        </html>
-        `;
-
-        // 3. 완성된 HTML 구조를 새 창에 덮어쓰기 형태로 렌더링
-        newWindow.document.open();
-        newWindow.document.write(htmlContent);
-        newWindow.document.close();
-
-    } catch (err) {
-        console.error(err);
-        newWindow.document.body.innerHTML = `<p style="text-align:center; color:red; margin-top:50px;">데이터를 처리하는 중 오류가 발생했습니다.</p>`;
-    }
-}
 
     // 페이지 로드 시 즉시 실행
     window.onload = executeLogistics;

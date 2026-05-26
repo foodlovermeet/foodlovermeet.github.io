@@ -3405,13 +3405,12 @@ let affordable = list.filter(item => {
         return;
     }
 
-	// 새 창에 임시 로딩 화면 주입 (디자인 수정 버전)
 		newWindow.document.write(`
 		<!DOCTYPE html>
 		<html lang="ko">
 		<head>
 			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 			<title>식단선생 - 상품 로딩중</title>
 			<style>
 				html, body {
@@ -3419,21 +3418,19 @@ let affordable = list.filter(item => {
 					padding: 0;
 					width: 100%;
 					height: 100%;
-				}
-				body {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-					color: #333;
 					background-color: #f8f9fa;
 				}
+				/* 모바일 뷰포트 높이 오류를 방지하기 위해 fixed 배치 사용 */
 				.loading-container {
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
 					text-align: center;
-					padding: 20px;
-					width: 100%;
+					width: 90%;
 					max-width: 400px;
 					box-sizing: border-box;
+					z-index: 9999;
 				}
 				.loader {
 					border: 4px solid #e2e8f0;

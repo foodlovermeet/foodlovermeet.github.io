@@ -3396,19 +3396,6 @@ let affordable = list.filter(item => {
 
     // 페이지 로드 시 즉시 실행
     window.onload = executeLogistics;
-	
-		// 페이지 로드 시점에 가짜 히스토리를 하나 강제로 삽입합니다.
-	history.pushState(null, null, window.location.href);
-
-	// 사용자가 백키를 누르면 popstate 이벤트가 발생합니다.
-	window.addEventListener('popstate', function(event) {
-		// 백키를 눌렀을 때 앱이 종료되는 대신 이동하고자 하는 '첫 화면 URL'을 지정합니다.
-		// 예: 메인 페이지가 존재하는 경우 해당 주소로 이동시킵니다.
-		const mainPageUrl = "https://foodlovermeet.github.io/index.html"; 
-		
-		// 첫 화면으로 강제 리다이렉트
-		window.location.href = mainPageUrl;
-	});
 </script>
 </body>
 </html>

@@ -67,13 +67,55 @@
         /* 2. 결과 화면 스타일 (초기에는 숨김 처리) */
         #result-screen {
             display: none; 
-            padding: 20px;
-            box-sizing: border-box;
+    padding: 70px 20px 20px 20px; /* 상단 70px 여백 확보 */
+    box-sizing: border-box;
         }
         
-       .header { text-align: center; padding: 15px 0; margin-bottom: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-                .header h2 { margin: 0; color: #2c3e50; font-size: 18px; }
-                .header span { color: #2ecc71; font-weight: bold; }
+       .header { 
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 50px;
+			background: white; 
+			box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
+			z-index: 1000;
+			display: flex;
+			align-items: center;
+			justify-content: space-between; /* 양 끝 정렬 */
+			box-sizing: border-box;
+			padding: 0 16px;
+		}
+
+		/* [추가] 뒤로가기 버튼 스타일 */
+		.back-btn {
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 8px 8px 8px 0; /* 터치 영역 확보 */
+			cursor: pointer;
+		}
+
+		.back-btn img {
+			width: 20px; /* 아이폰 백버튼 규격 */
+			height: 20px;
+			object-fit: contain;
+		}
+
+		.back-btn:active {
+			opacity: 0.4; /* 클릭 시 피드백 효과 */
+		}
+
+		.header h2 { 
+			margin: 0; 
+			color: #2c3e50; 
+			font-size: 16px; 
+			flex-grow: 1;
+			text-align: center;
+			margin-right: 28px; /* 홈 버튼과의 균형을 위한 우측 여백 */
+		}
+		.header span { color: #2ecc71; font-weight: bold; }
                 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 800px; margin: 0 auto; }
                 .card { background: white; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s; }
                 .card:active { transform: scale(0.98); }
@@ -118,6 +160,8 @@
 
     <div id="result-screen">
         <div class="header">
+		<a href="./index.html" class="back-btn"><img src="./back.png" alt="뒤로가기">
+        </a>
             <h2>식단선생 추천 상품: <span id="header-keyword">재료</span></h2>
         </div>
         <div class="grid" id="product-grid">
@@ -199,33 +243,6 @@
                 document.body.innerHTML = `<div class="error-msg"><h3>데이터 로드 실패</h3><p>네트워크 상태를 확인한 후 다시 시도해 주세요.</p></div>`;
             }
         });
-
-		
-
-
-    // 1. 진입 즉시 히스토리 스택을 2개로 복사하여 백키 버퍼를 만듭니다.
-(function() {
-    history.pushState(null, null, window.location.href);
-    
-    // 사용자가 화면을 터치하거나 클릭했을 때 활성화되도록 유도
-    const activateBackDetect = () => {
-        window.addEventListener('popstate', handleBackEvent, { once: true });
-    };
-    
-    window.addEventListener('touchstart', activateBackDetect, { once: true });
-    window.addEventListener('click', activateBackDetect, { once: true });
-    
-    // 초기 터치가 없더라도 기본적으로 이벤트를 걸어둡니다.
-    window.addEventListener('popstate', handleBackEvent);
-})();
-
-function handleBackEvent() {
-    // 이동하고자 하는 첫 화면(메인)의 주소를 정확히 입력하십시오.
-    const mainPageUrl = "https://foodlovermeet.github.io/"
-    
-    // 뒤로가기 감지 시 메인으로 강제 리다이렉트
-    window.location.replace(mainPageUrl);
-}
     </script>
 </body>
 </html>

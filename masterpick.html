@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>식단선생 - 추천 상품</title>
+    <style>
+        /* 공통 기본 스타일 및 초기화 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f4f6f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #333;
+        }
+
+        /* 1. 로딩 화면 스타일 (화면 정중앙 고정) */
+        #loading-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-sizing: border-box;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .loader {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #2ecc71;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+        .loading-title {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.4;
+            color: #2c3e50;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.5px;
+        }
+        .loading-title span { color: #2ecc71; }
+        .divider {
+            width: 40px;
+            height: 3px;
+            background-color: #e2e8f0;
+            margin-bottom: 20px;
+            border-radius: 2px;
+        }
+        .loading-subtitle {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.6;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        /* 2. 결과 화면 스타일 (초기에는 숨김 처리) */
+        #result-screen {
+            display: none; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .header h2 { margin: 0; color: #2c3e50; font-size: 18px; }
+        .header span { color: #2ecc71; font-weight: bold; }
+        
+        /* 모바일 최적화 2열 상품 그리드 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .card:active { transform: scale(0.98); }
+        
+        /* 이미지 영역 (75% 높이 비율로 크기 최적화 수정) */
+        .img-box {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; 
+            background: #f8f9fa;
+        }
+        .img-box img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+        .title {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #34495e;
+            height: 2.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin: 0 0 8px 0;
+        }
+        .price { margin-top: auto; font-size: 15px; font-weight: bold; color: #e74c3c; }
+
+        /* 에러 메시지 스타일 */
+        .error-msg { text-align: center; margin-top: 100px; color: #7f8c8d; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <h1 class="loading-title"><span>식단선생</span>이 최적의 상품을<br>엄선하고 있습니다!</h1>
+        <div class="divider"></div>
+        <p class="loading-subtitle">
+            '<span id="query-keyword">재료</span>' 관련 상품 정보를 가져오는 중입니다.<br>잠시만 기다려 주십시오.
+        </p>
+    </div>
+
+    <div id="result-screen">
+        <div class="header">
+            <h2>식단선생 추천 상품: <span id="header-keyword">재료</span></h2>
+        </div>
+        <div class="grid" id="product-grid">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            // 1. URL 주소창에서 변수(q) 추출
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+
+            if (!query) {
+                document.body.innerHTML = `<div class="error-msg"><h3>잘못된 접근입니다.</h3><p>검색어가 존재하지 않습니다.</p></div>`;
+                return;
+            }
+
+            // 로딩 문구에 현재 검색어 반영
+            const decodedQuery = decodeURIComponent(query);
+            document.getElementById('query-keyword').innerText = decodedQuery;
+            document.getElementById('header-keyword').innerText = decodedQuery;
+
+            // 2. ADPICK API 호출 진행
+            const BIZ_API_BASE = "https://biz.adpick.co.kr/api/6350388424916232/search";
+            const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=10`;
+
+            try {
+                const response = await fetch(requestUrl);
+                if (!response.ok) throw new Error("API 통신 실패");
+
+                const jsonResult = await response.json();
+                const items = Array.isArray(jsonResult) ? jsonResult : (jsonResult.data || jsonResult.list || []);
+
+                // 3. 호출 완료 후 화면 전환 처리
+                const loadingScreen = document.getElementById('loading-screen');
+                const resultScreen = document.getElementById('result-screen');
+                const productGrid = document.getElementById('product-grid');
+
+                loadingScreen.style.display = 'none'; // 로딩창 끄기
+                resultScreen.style.display = 'block'; // 결과창 켜기
+
+                if (items.length === 0) {
+                    productGrid.innerHTML = `<p style="grid-column: span 2; text-align:center; padding: 50px 0; color:#7f8c8d;">'${decodedQuery}' 결과 상품이 없습니다.</p>`;
+                    return;
+                }
+
+                // 4. 상품 리스트 동적 빌드
+                let gridHtml = '';
+                items.forEach(item => {
+                    const title = item.title || item.prodName || "추천 상품";
+                    const price = item.price ? `${Number(item.price).toLocaleString()}원` : "가격 문의";
+                    const imgUrl = item.image || item.imgUrl || "https://via.placeholder.com/150";
+                    const targetLink = item.link || item.url || "#";
+
+                    gridHtml += `
+                        <a href="${targetLink}" target="_blank" class="card">
+                            <div class="img-box">
+                                <img src="${imgUrl}" alt="${title}" onerror="this.src='https://via.placeholder.com/150';">
+                            </div>
+                            <div class="info">
+                                <h4 class="title">${title}</h4>
+                                <div class="price">${price}</div>
+                            </div>
+                        </a>
+                    `;
+                });
+                
+                productGrid.innerHTML = gridHtml;
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading-screen').style.display = 'none';
+                document.body.innerHTML = `<div class="error-msg"><h3>데이터 로드 실패</h3><p>네트워크 상태를 확인한 후 다시 시도해 주세요.</p></div>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3406,7 +3406,7 @@ let affordable = list.filter(item => {
     }
 
 	// 새 창에 임시 로딩 화면 주입 (디자인 수정 버전)
-	newWindow.document.write(`
+		newWindow.document.write(`
 		<!DOCTYPE html>
 		<html lang="ko">
 		<head>
@@ -3414,45 +3414,47 @@ let affordable = list.filter(item => {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>식단선생 - 상품 로딩중</title>
 			<style>
-				body { 
-					display: flex; 
-					justify-content: center; 
-					align-items: center; 
-					height: 100vh; 
-					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-					color: #333; 
-					background: #f8f9fa; 
+				html, body {
 					margin: 0;
+					padding: 0;
+					width: 100%;
+					height: 100%;
+				}
+				body {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+					color: #333;
+					background-color: #f8f9fa;
 				}
 				.loading-container {
 					text-align: center;
 					padding: 20px;
-					max-width: 90%;
+					width: 100%;
+					max-width: 400px;
+					box-sizing: border-box;
 				}
-				/* 로딩 스피너 크기 및 여백 조정 */
-				.loader { 
-					border: 4px solid #e2e8f0; 
-					border-top: 4px solid #2ecc71; 
-					border-radius: 50%; 
-					width: 40px; 
-					height: 40px; 
-					animation: spin 1s linear infinite; 
-					margin: 0 auto 24px auto; 
+				.loader {
+					border: 4px solid #e2e8f0;
+					border-top: 4px solid #2ecc71;
+					border-radius: 50%;
+					width: 40px;
+					height: 40px;
+					animation: spin 1s linear infinite;
+					margin: 0 auto 24px auto;
 				}
-				/* 메인 강조 타이틀 */
 				.loading-title {
-					font-size: 26px;
+					font-size: 24px;
 					font-weight: 800;
 					line-height: 1.4;
 					color: #2c3e50;
 					margin: 0 0 16px 0;
 					letter-spacing: -0.5px;
 				}
-				/* '식단선생' 브랜드 컬러 포인트 */
 				.loading-title span {
-					color: #2ecc71; 
+					color: #2ecc71;
 				}
-				/* 시각적 안정감을 주는 분리선 */
 				.divider {
 					width: 40px;
 					height: 3px;
@@ -3460,7 +3462,6 @@ let affordable = list.filter(item => {
 					margin: 0 auto 20px auto;
 					border-radius: 2px;
 				}
-				/* 하단 안내 문구 */
 				.loading-subtitle {
 					font-size: 15px;
 					font-weight: 500;
@@ -3468,7 +3469,10 @@ let affordable = list.filter(item => {
 					color: #7f8c8d;
 					margin: 0;
 				}
-				@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+				@keyframes spin { 
+					0% { transform: rotate(0deg); } 
+					100% { transform: rotate(360deg); } 
+				}
 			</style>
 		</head>
 		<body>

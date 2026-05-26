@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>식단선생 - 추천상품</title>
+    <title>식단선생 - 추천 상품</title>
     <style>
         /* 공통 기본 스타일 및 초기화 */
         html, body {
@@ -173,7 +173,7 @@
 
             // 2. ADPICK API 호출 진행
             const BIZ_API_BASE = "https://biz.adpick.co.kr/api/6350388424916232/search";
-            const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=10`;
+            const requestUrl = `${BIZ_API_BASE}?q=${encodeURIComponent(query)}&limit=20`;
 
             try {
                 const response = await fetch(requestUrl);
@@ -194,8 +194,36 @@
                     productGrid.innerHTML = `<p style="grid-column: span 2; text-align:center; padding: 50px 0; color:#7f8c8d;">'${decodedQuery}' 결과 상품이 없습니다.</p>`;
                     return;
                 }
+				
+				let htmlContent = `
+				 // 2. 받아온 JSON 데이터를 루프 돌며 카드 컴포넌트로 생성
+					items.forEach(item => {
+						const title = item.title;
+						const price = item.price ? `${Number(item.price).toLocaleString()}원` : "가격 문의";
+						const imgUrl = item.photo;
+						const targetLink = item.commissionlink;
+						const cp_icon=item.cp_icon;
+						const cp_name= item.cp_name;
 
-                // 4. 상품 리스트 동적 빌드
+						htmlContent += `
+							<a href="${targetLink}" target="_blank" class="card">
+								<div class="img-box">
+									<img src="${imgUrl}" alt="${title}">
+								</div>
+								<div class="info">							
+										<div style="display: flex;  gap: 5px;">
+											<img src="${cp_icon}" class="icon-box" alt="${cp_name}">
+											<h1 class="title" style="margin-top:2px" >${cp_name}</h1>
+										</div>
+									<h4 class="title">${title}</h4>
+									<div class="price">${price}</div>
+								</div>
+							</a>
+						`;
+					});
+
+					htmlContent += `
+              <!--   // 4. 상품 리스트 동적 빌드
                 let gridHtml = '';
                 items.forEach(item => {
                     const title = item.title || item.prodName || "추천 상품";
@@ -215,8 +243,8 @@
                         </a>
                     `;
                 });
-                
-                productGrid.innerHTML = gridHtml;
+                 -->
+                productGrid.innerHTML = htmlContent;
 
             } catch (err) {
                 console.error(err);

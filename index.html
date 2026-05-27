@@ -3392,9 +3392,18 @@ let affordable = list.filter(item => {
 		}
 	}
 
+	window.addEventListener('pageshow', function(event) {
+		// event.persisted가 true이면 BFCache(뒤로가기)로 로드된 상태요.
+		// 또는 브라우저에 따라 performance.navigation.type을 참조하기도 하오.
+		const isBackNavigation = event.persisted ||(window.performance && window.performance.navigation.type === 2);
 
-    // 페이지 로드 시 즉시 실행
-    window.onload = executeLogistics;
+		if (isBackNavigation) {
+			
+		} else {
+			// 처음 정상적으로 페이지에 진입했을 때만 초기 로직을 수행하오.
+			executeLogistics();
+		}
+	});
 </script>
 </body>
 </html>

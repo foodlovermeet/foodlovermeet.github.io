@@ -236,6 +236,22 @@
 
 
  <script type="text/javascript">
+ (function() {
+    const systemLang = navigator.language || navigator.userLanguage;
+    
+    // 시스템 언어가 한국어가 아니라면 (예: en, en-US 등)
+    if (systemLang && !systemLang.startsWith('ko')) {
+        const targetLang = systemLang.substring(0, 2); // 'en' 추출
+        
+        // 구글 번역 쿠키 형식: /원본언어/목적언어 (한국어->영어 면 /ko/en)
+        const cookieValue = "/ko/" + targetLang;
+        
+        // 현재 도메인에 구글 번역 쿠키를 강제로 주입하오.
+        document.cookie = "googtrans=" + cookieValue + "; path=/;";
+        document.cookie = "googtrans=" + cookieValue + "; path=/; domain=" + location.hostname + ";";
+    }
+})();
+
 	function googleTranslateElementInit() {  
 	  new google.translate.TranslateElement({
 		pageLanguage: 'ko',

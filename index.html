@@ -242,41 +242,9 @@
 		layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
 		autoDisplay: true
 	  }, 'google_translate_element');
-	  
-		  // [처방] 웹뷰가 구동된 안드로이드 기기의 시스템 언어를 읽어옵니다.
-		// 안드로이드 설정이 영어라면 'en' 또는 'en-US' 등이 반환되오.
-		const systemLang = navigator.language || navigator.userLanguage;
-    
-		// 만약 시스템 언어가 한국어(ko)가 아니라면 자동 번역을 시도하오.
-		if (systemLang && !systemLang.startsWith('ko')) {
-			// 구글 위젯의 내부 콤보 박스(.goog-te-combo)가 생성될 때까지 잠시 대기하오.
-			const checkExist = setInterval(function() {
-				const selectEl = document.querySelector('.goog-te-combo');
-				
-				if (selectEl) {
-					clearInterval(checkExist); // 요소를 찾았으니 대기 종료
-
-					// 시스템 언어 코드의 앞 두 글자(예: en, ja, zh)를 추출하오.
-					const targetLang = systemLang.substring(0, 2); 
-					
-					// 구글 번역 콤보 박스의 값을 기기 언어로 변경하오.
-					selectEl.value = targetLang;
-					
-					// 값이 변경되었음을 구글 엔진에 알려 번역을 강제 구동하오.
-					selectEl.dispatchEvent(new Event('change'));
-					
-					console.log("기기 언어(" + systemLang + ")를 감지하여 번역을 자동 실행했습니다.");
-				}
-			}, 100); // 0.1초 간격으로 확인
-
-			// 과도한 루프를 방지하기 위해 5초 후에는 확인을 강제 종료하오.
-			setTimeout(function() {
-				clearInterval(checkExist);
-			}, 5000);
-		}
 	}
 </script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en"></script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
 const DATA = {
     B: [

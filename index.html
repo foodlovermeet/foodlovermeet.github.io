@@ -3362,6 +3362,9 @@ let affordable = list.filter(item => {
         card.innerHTML = html;
         display.appendChild(card);
     });
+	
+	
+		saveCurrentState();
 }
 
 	function saveAsInteractiveHTML() {
@@ -3399,20 +3402,12 @@ let affordable = list.filter(item => {
 			people: document.getElementById('peopleInput')?.value || '',
 			budgetOpt: document.getElementById('budgetOption')?.value || 'normal',
 			cuisineOpt: document.getElementById('cuisineOption')?.value || 'all',
+			summaryHtml: document.getElementById('budgetSummary')?.innerHTML || '',
 			// 결과가 출력되는 핵심 구역(#display)의 HTML을 통째로 저장하오.
 			displayHtml: document.getElementById('display')?.innerHTML || ''
 		};
 		sessionStorage.setItem('saved_diet_state', JSON.stringify(state));
 	}
-
-	// [2] 사용자가 '식단 편성' 버튼을 누르면 계산을 수행하고 동시에 상태를 저장하도록 유도하오.
-	const originalExecuteLogistics = executeLogistics;
-	executeLogistics = function() {
-		// 기존 로직 수행
-		originalExecuteLogistics();
-		// 수행 직후의 상태를 세션 스토리지에 기록하오.
-		saveCurrentState();
-	};
 
 	// [3] 페이지가 새로 로드되었을 때(뒤로가기로 복귀 포함) 세션을 점검하여 화면을 복원하오.
 	window.addEventListener('load', function() {
@@ -3427,7 +3422,12 @@ let affordable = list.filter(item => {
 			if (document.getElementById('budgetOption')) document.getElementById('budgetOption').value = state.budgetOpt;
 			if (document.getElementById('cuisineOption')) document.getElementById('cuisineOption').value = state.cuisineOpt;
 			
-			// 2. 가장 중요한 식단 결과 화면(#display) 복원
+			// 2. [교정] 누락되었던 예산 요약 영역(#budgetSummary) 복원
+			if (state.summaryHtml.trim() !== "" && document.getElementById('budgetSummary')) {
+				document.getElementById('budgetSummary').innerHTML = state.summaryHtml;
+			}
+		
+			// 3. 가장 중요한 식단 결과 화면(#display) 복원
 			if (state.displayHtml.trim() !== "" && document.getElementById('display')) {
 				document.getElementById('display').innerHTML = state.displayHtml;
 				console.log("뒤로가기 복귀 감지: 이전 식단 데이터를 화면에 복원하였습니다.");

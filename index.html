@@ -173,7 +173,6 @@
 <body>
 
 <div id="mainApp" class="container">
-<div id="google_translate_element" style="text-align: center;margin-top: 35px;"></div>
     <h1>식단을 만들어보세요</h1>
     
     <div class="setup-box">
@@ -3446,7 +3445,6 @@ let affordable = list.filter(item => {
 			// 3. 가장 중요한 식단 결과 화면(#display) 복원
 			if (state.displayHtml.trim() !== "" && document.getElementById('display')) {
 				document.getElementById('display').innerHTML = state.displayHtml;
-				console.log("뒤로가기 복귀 감지: 이전 식단 데이터를 화면에 복원하였습니다.");
 			} else {
 				// 저장된 식단 화면이 없다면 초기 진입으로 간주하고 로직을 실행하오.
 				executeLogistics();

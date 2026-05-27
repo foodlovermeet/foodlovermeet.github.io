@@ -116,7 +116,7 @@
 			margin-right: 28px; /* 홈 버튼과의 균형을 위한 우측 여백 */
 		}
 		.header span { color: #2ecc71; font-weight: bold; }
-                .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 800px; margin: 0 auto; }
+                .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 800px; margin: 0 auto; margin-top=35px; }
                 .card { background: white; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s; }
                 .card:active { transform: scale(0.98); }
                 .img-box { position: relative; width: 100%; padding-top: 50%; background: #f8f9fa; }
@@ -137,9 +137,39 @@
 					object-fit: cover; 
 					border-radius: 4px; 
 				}
-                .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-                .title { font-size: 13px; line-height: 1.4; color: #34495e; height: 2.8em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin: 0 0 8px 0; }
-                .price { margin-top: auto; font-size: 15px; font-weight: bold; color: #e74c3c; }
+             .info { 
+				padding: 6px 8px; 
+				display: flex; 
+				flex-direction: column; 
+				flex-grow: 1; 
+			}
+
+			.title { 
+				font-size: 13px; 
+				line-height: 1.3; 
+				color: #34495e; 
+				max-height: 2.6em; 				
+				overflow: hidden; 
+				text-overflow: ellipsis; 
+				display: -webkit-box; 
+				-webkit-line-clamp: 2; 
+				-webkit-box-orient: vertical; 
+				
+				/* 확실하게 하단 마진을 제어 */
+				margin: 0 0 4px 0; 
+			}
+
+			.price { 
+				font-size: 14px; 
+				font-weight: bold; 
+				color: #e74c3c; 
+				
+				/* [교정] 브라우저 기본 마진을 확실히 제거하고 상단 간격을 최소화 */
+				margin: 2px 0 0 0; 
+				
+				/* 만약 .info의 flex-grow 때문에 가격이 카드 제일 아래로 처지는 것을 막으려면 
+				   여기에 margin-bottom: auto; 를 주는 것이 해결책이 될 수 있습니다. */
+			}
 
         /* 에러 메시지 스타일 */
         .error-msg { text-align: center; margin-top: 100px; color: #7f8c8d; }

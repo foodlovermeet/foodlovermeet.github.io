@@ -168,12 +168,21 @@
 		  transform: translateY(0);
 		  box-shadow: 0 2px 4px rgba(255, 107, 53, 0.1);
 		}
+		
+		 .input-search-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div id="mainApp" class="container">
-    <h1>식단을 만들어보세요</h1>
+    <div class="container">
+    <h1>식단을 만들어 보세요</h1>
+		<div class="input-search-group">
+			<input type="text" id="ingredients" placeholder="보유 재료 입력 (예: 계란, 두부)" value="">
+			<button onclick="searchOnGoogle()">식단 검색</button>
+		</div>
+	</div>
     
     <div class="setup-box">
         <div class="input-group">
@@ -5111,6 +5120,21 @@ const DATA = {
 	
     ]
 };
+
+function searchOnGoogle() {
+    const input = document.getElementById('ingredients').value.trim();
+    if (!input) {
+        alert("재료를 입력해주세요.");
+        return;
+    }
+    
+    // 입력된 재료에 '레시피' 키워드를 붙여 구글 검색 URL 생성
+    const query = encodeURIComponent(input + " 레시피");
+    const googleSearchUrl = `https://www.google.com/search?q=${query}`;
+    
+    // 구글 검색 페이지를 새 탭으로 열기
+    window.open(googleSearchUrl, '_blank');
+}
 
 function executeLogistics() {
     const targetBudget = parseInt(document.getElementById('budgetInput').value);
